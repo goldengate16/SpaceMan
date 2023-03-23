@@ -1,0 +1,33 @@
+/**
+   * @function loginToAribaGuidedBuying
+   * @description Login to Ariba Guided Buying
+   */
+  this.loginToAribaGuidedBuying = function (username, password, usernameSSO, passwordSSO) {
+ 
+    it("Step: navigate to Ariba Guided Buying", async function () {
+      console.log("Guided Buying URL: " + data.guidedBuying.url)
+      await common.navigation.navigateToUrl(data.guidedBuying.url);
+    });
+ 
+    it("Step: check if it redirect to SSO", async function () {
+      await util.browser.sleep(global.timeout.long);
+      var currentUrl = await util.browser.getCurrentUrl();
+      console.log("Current Browser URL: " + currentUrl);
+     
+      if (currentUrl.startsWith('https://anmlxbe4l.accounts400.ondemand.com')) {
+          console.log("SSO Enabled.");
+          await ariba.guidedBuying.session.login(usernameSSO, passwordSSO, global.timeout.min);
+          await util.browser.sleep(global.timeout.long)
+      }
+      else if (currentUrl.startsWith('https://ase6phg1h.accounts400.ondemand.com'))  {
+        console.log("SSO Enabled.");
+        await ariba.guidedBuying.session.login(usernameSSO, passwordSSO, global.timeout.min);
+        await util.browser.sleep(global.timeout.long);
+      }
+      else {
+          console.log("SSO is not enabled.Login as a regular GB user.");
+          await ariba.guidedBuying.session.login(username, password, global.timeout.min);
+          await util.browser.sleep(global.timeout.long);
+      }
+    });
+  };
